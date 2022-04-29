@@ -38,6 +38,41 @@ def cadastro(request):
     else:
         return render(request, 'usuarios\cadastro.html')
 
+def deletar_receita(request, receita_id):
+    receita = get_object_or_404(Receita, pk=receita_id)
+    receita.delete()
+    print('Receita deletada.')
+    return redirect('dashboard')
+
+def editar_receita(request, receita_id):
+    receita = get_object_or_404(Receita, pk=receita_id)
+
+    dados = {
+        'receita': receita
+    }
+
+    return render(request, 'usuarios\editar_receita.html', dados)
+
+def atualizar_receita(request):
+    if request.method == 'POST':
+        receita_id = request.POST['receita_id']
+        receita_para_atualizar = Receita.objects.get(pk=receita_id)
+        receita_para_atualizar.nome_receita = request.POST['nome_receita']
+        receita_para_atualizar.ingredientes = request.POST['ingredientes']
+        receita_para_atualizar.modo_preparo = request.POST['modo_preparo']
+        receita_para_atualizar.tempo_preparo = request.POST['tempo_preparo']
+        receita_para_atualizar.rendimento = request.POST['rendimento']
+        receita_para_atualizar.categoria = request.POST['categoria']
+        
+        if 'foto_receita' in request.FILES:
+            receita_para_atualizar.foto_receita = request.FILES['foto_receita']
+
+        receita_para_atualizar.save()
+
+        return redirect('dashboard')
+    else:
+        return redirect('editar_receita')
+
 def login(request):
     if request.method == 'POST':
         email = request.POST['email']
