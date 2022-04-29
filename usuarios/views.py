@@ -10,20 +10,24 @@ def cadastro(request):
         password = request.POST['password']
         password2 = request.POST['password2']
 
-        if not nome.strip():
-            print('O campo nome não pode ficar em branco')
+        if campo_vazio(nome):
+            messages.error(request, 'O campo nome não pode ficar em branco')
             return redirect('cadastro')
         
-        if not email.strip():
-            print('O campo email não pode ficar em branco')
+        if campo_vazio(email):
+            messages.error(request, 'O campo email não pode ficar em branco')
             return redirect('cadastro')
         
-        if password != password2:
+        if senhas_nao_sao_iguais(password, password2):
             messages.error(request, 'As senhas não são iguais')
             return redirect('cadastro')
 
         if User.objects.filter(email=email).exists():
-            print('Usuário já cadastrado')
+            messages.error(request, 'Usuário já cadastrado')
+            return redirect('cadastro')
+
+        if User.objects.filter(username=nome).exists():
+            messages.error(request, 'Usuário já cadastrado')
             return redirect('cadastro')
         
         user = User.objects.create_user(username=nome, email=email, password=password)
@@ -38,9 +42,8 @@ def login(request):
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['senha']
-        print(email, password)
         if (email or password) == '':
-            print('Email e senha não podem estar vazios')
+            messages.error(request, 'Email e senha não podem estar vazios')
             return render(request, 'usuarios\login.html')
         else:
             if User.objects.filter(email=email).exists():
@@ -94,4 +97,9 @@ def criar_receita(request):
         return redirect('dashboard')
     else:
         return render(request, 'usuarios\criar_receita.html')
-        
+
+def campo_vazio(campo):
+    return not campo.strip()
+
+def senhas_nao_sao_iguais(password, password2):
+    return password!=password2
