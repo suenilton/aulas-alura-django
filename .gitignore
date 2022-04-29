@@ -1,10 +1,6 @@
 *.log
 *.pot
 *.pyc
-<<<<<<< HEAD
-*.zip
-=======
->>>>>>> e89fd545ea447fd1628f56ac4383af886d68c575
 __pycache__
 db.sqlite3
 media
