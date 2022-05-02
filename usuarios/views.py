@@ -41,7 +41,6 @@ def cadastro(request):
 def deletar_receita(request, receita_id):
     receita = get_object_or_404(Receita, pk=receita_id)
     receita.delete()
-    print('Receita deletada.')
     return redirect('dashboard')
 
 def editar_receita(request, receita_id):
@@ -51,7 +50,7 @@ def editar_receita(request, receita_id):
         'receita': receita
     }
 
-    return render(request, 'usuarios\editar_receita.html', dados)
+    return render(request, 'receitas\editar_receita.html', dados)
 
 def atualizar_receita(request):
     if request.method == 'POST':
@@ -131,7 +130,7 @@ def criar_receita(request):
 
         return redirect('dashboard')
     else:
-        return render(request, 'usuarios\criar_receita.html')
+        return render(request, 'receitas\criar_receita.html')
 
 def campo_vazio(campo):
     return not campo.strip()
