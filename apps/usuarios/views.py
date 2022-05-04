@@ -4,6 +4,8 @@ from django.contrib import auth, messages
 from receitas.models import Receita
 
 def cadastro(request):
+    """Cadastra o usuário no sistema"""
+
     if request.method == "POST":
         nome = request.POST['nome']
         email = request.POST['email']
@@ -39,6 +41,8 @@ def cadastro(request):
         return render(request, 'usuarios\cadastro.html')
 
 def login(request):
+    """Loga o usuário no sistema"""
+
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['senha']
@@ -62,6 +66,8 @@ def login(request):
         return render(request, 'usuarios\login.html')
 
 def dashboard(request):
+    """Exibe a página de dashboard do usuário"""
+
     if request.user.is_authenticated:
         id = request.user.id
         receitas = Receita.objects.order_by('-date_receita').filter(pessoa=id)
@@ -75,11 +81,17 @@ def dashboard(request):
         return redirect('index')
 
 def logout(request):
+    """Realiza o logout do usuário"""
+
     auth.logout(request)
     return redirect('index')
 
 def campo_vazio(campo):
+    """Verifica se o campo passado por parâmetro está em branco"""
+
     return not campo.strip()
 
 def senhas_nao_sao_iguais(password, password2):
+    """Veririca se as senhas passadas por parâmetro são iguais"""
+
     return password!=password2
